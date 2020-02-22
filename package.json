@@ -15,11 +15,13 @@
     "typescript": "^3.8.2"
   },
   "dependencies": {
+    "@types/shortid": "^0.0.29",
     "apollo-server": "^2.10.1",
     "esm": "^3.2.25",
     "graphql": "^14.6.0",
     "pg": "^7.18.2",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.21.5"
+    "sequelize": "^5.21.5",
+    "shortid": "^2.2.15"
   }
 }

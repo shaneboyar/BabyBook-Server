@@ -3,8 +3,8 @@ export default (sequelize, DataTypes) => {
     "Image",
     {
       uri: DataTypes.STRING,
-      latitude: DataTypes.INTEGER,
-      longitude: DataTypes.INTEGER,
+      latitude: DataTypes.FLOAT,
+      longitude: DataTypes.FLOAT,
       timestamp: DataTypes.INTEGER
     },
     {}

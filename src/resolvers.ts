@@ -1,11 +1,33 @@
+import shortid from "shortid";
 import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
 import { IResolvers } from "graphql-tools";
+import { createWriteStream } from "fs";
+
+const storeUpload = async ({ stream }: { stream: any }): Promise<any> => {
+  const path = `../images/${shortid.generate()}.jpg`;
+  const file = createWriteStream(path);
+
+  return new Promise((resolve, reject) => {
+    return stream
+      .pipe(createWriteStream(path))
+      .on("finish", () => resolve({ path }))
+      .on("error", reject);
+  });
+};
+
+const processUpload = async (stream: any) => {
+  const { path } = await storeUpload({ stream });
+  return path;
+};
 
 export const resolvers: IResolvers = {
   Query: {
     async getUser(_root, { id }, { models }) {
       return models.User.findByPk(id);
+    },
+    async getUserByUUID(_root, { uuid }, { models }) {
+      return models.User.findOne({ where: { uuid } });
     },
     async getAllUsers(_root, _args, { models }) {
       return models.User.findAll();
@@ -18,18 +40,21 @@ export const resolvers: IResolvers = {
     }
   },
   Mutation: {
-    async createUser(root, { name }, { models }) {
+    async createUser(root, { name, uuid }, { models }) {
       return models.User.create({
-        name
+        name,
+        uuid
       });
     },
     async createImage(
       root,
-      { uri, latitude, longitude, timestamp, UserId },
+      { file, latitude, longitude, timestamp, UserId },
       { models }
     ) {
+      const imageUrl = await processUpload(file);
+      console.log("imageUrl: ", imageUrl);
       return models.Image.create({
-        uri,
+        uri: imageUrl,
         latitude,
         longitude,
         timestamp,
