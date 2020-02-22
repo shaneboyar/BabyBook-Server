@@ -31,7 +31,7 @@ export const typeDefs = gql`
       uri: String!
       latitude: Int!
       longitude: Int!
-      timestamp: Date
+      timestamp: Date!
       UserId: Int!
     ): Image!
   }
