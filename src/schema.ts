@@ -1,6 +1,8 @@
 import { gql } from "apollo-server";
 
 export const typeDefs = gql`
+  scalar Date
+
   type File {
     filename: String!
     mimetype: String!
@@ -14,6 +16,7 @@ export const typeDefs = gql`
     longitude: Int
     user: User!
     file: Upload!
+    createdAt: Date!
   }
 
   type User {

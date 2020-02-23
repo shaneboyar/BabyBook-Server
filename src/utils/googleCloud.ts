@@ -11,10 +11,25 @@ export const upload = async (fileString: any): Promise<any> => {
   const name = `${shortid.generate()}.jpg`;
   bucket.file(name);
 
+  const options = {
+    destination: name,
+    resumable: true,
+    validation: "crc32c"
+    // metadata: {
+    //   metadata: {
+    //     event: 'Fall trip to the zoo'
+    //   }
+    // }
+  };
+
   return new Promise((resolve, reject) => {
     const TMP_FILE_PATH = "tmpfile.jpg";
     writeFile(TMP_FILE_PATH, fileString, { encoding: "base64" }, () => {
-      return bucket.upload(TMP_FILE_PATH, function(err, file, { mediaLink }) {
+      return bucket.upload(TMP_FILE_PATH, options, function(
+        err,
+        file,
+        { mediaLink }
+      ) {
         if (file) {
           console.log("file exists?");
           resolve(mediaLink);
