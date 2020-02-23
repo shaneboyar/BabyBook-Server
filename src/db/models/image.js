@@ -4,8 +4,7 @@ export default (sequelize, DataTypes) => {
     {
       uri: DataTypes.STRING,
       latitude: DataTypes.FLOAT,
-      longitude: DataTypes.FLOAT,
-      timestamp: DataTypes.INTEGER
+      longitude: DataTypes.FLOAT
     },
     {}
   );

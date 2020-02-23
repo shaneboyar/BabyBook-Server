@@ -1,8 +1,6 @@
 import { gql } from "apollo-server";
 
 export const typeDefs = gql`
-  scalar Date
-
   type File {
     filename: String!
     mimetype: String!
@@ -11,12 +9,11 @@ export const typeDefs = gql`
 
   type Image {
     id: Int!
-    uri: String
+    uri: String!
     latitude: Int
     longitude: Int
-    timestamp: Date
     user: User!
-    file: ReactNativeFile!
+    file: Upload!
   }
 
   type User {
@@ -39,7 +36,6 @@ export const typeDefs = gql`
     createImage(
       latitude: Float!
       longitude: Float!
-      timestamp: Date!
       UserId: Int!
       file: Upload!
     ): Image!

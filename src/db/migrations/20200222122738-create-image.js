@@ -25,9 +25,6 @@ module.exports = {
       longitude: {
         type: Sequelize.FLOAT
       },
-      timestamp: {
-        type: Sequelize.INTEGER
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
