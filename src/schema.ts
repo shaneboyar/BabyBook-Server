@@ -23,7 +23,14 @@ export const typeDefs = gql`
     id: Int!
     name: String
     images: [Image]
+    favorites: [Favorite]
     uuid: String
+  }
+
+  type Favorite {
+    UserId: Int!
+    ImageId: Int!
+    Image: Image!
   }
 
   type Query {
@@ -32,10 +39,13 @@ export const typeDefs = gql`
     getAllUsers: [User!]!
     getImage(id: Int!): Image
     getAllImages: [Image!]!
+    getAllFavorites: [Favorite]!
+    getUserFavorites(UserId: Int!): [Favorite]!
   }
 
   type Mutation {
     createUser(name: String!, uuid: String!): User!
+    createFavorite(UserId: Int!, ImageId: Int!): Favorite!
     createImage(
       latitude: Float!
       longitude: Float!

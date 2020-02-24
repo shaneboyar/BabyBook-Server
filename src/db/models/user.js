@@ -10,6 +10,7 @@ export default (sequelize, DataTypes) => {
   User.associate = function(models) {
     // associations can be defined here
     User.hasMany(models.Image);
+    User.hasMany(models.Favorite);
   };
   return User;
 };

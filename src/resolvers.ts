@@ -14,6 +14,17 @@ export const resolvers: IResolvers = {
     async getAllUsers(_root, _args, { models }) {
       return models.User.findAll();
     },
+    async getAllFavorites(_root, _args, { models }) {
+      return models.Favorite.findAll();
+    },
+    async getUserFavorites(_root, { UserId }, { models }) {
+      console.log("UserId: ", UserId);
+      // return models.Favorite.findAll({ where: { UserId } });
+      return models.Favorite.findAll({
+        where: { UserId },
+        include: models.Image
+      });
+    },
     async getImage(_root, { id }, { models }) {
       return models.Image.findByPk(id);
     },
@@ -26,6 +37,12 @@ export const resolvers: IResolvers = {
       return models.User.create({
         name,
         uuid
+      });
+    },
+    async createFavorite(root, { UserId, ImageId }, { models }) {
+      return models.Favorite.create({
+        UserId,
+        ImageId
       });
     },
     async createImage(root, { file, latitude, longitude, UserId }, { models }) {
@@ -47,11 +64,19 @@ export const resolvers: IResolvers = {
   User: {
     async images(images) {
       return images.getImages();
+    },
+    async favorites(favorites) {
+      return favorites.getFavorites();
     }
   },
   Image: {
     async user(user) {
       return user.getUser();
+    }
+  },
+  Favorite: {
+    async Image(image) {
+      return image.getImage();
     }
   },
   Date: new GraphQLScalarType({
