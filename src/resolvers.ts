@@ -29,13 +29,19 @@ export const resolvers: IResolvers = {
       });
     },
     async createImage(root, { file, latitude, longitude, UserId }, { models }) {
-      const imageUrl = await upload(file);
-      return models.Image.create({
-        uri: imageUrl,
-        latitude,
-        longitude,
-        UserId
-      });
+      try {
+        const imageUrl = await upload(file);
+        console.log("imageUrl: ", imageUrl);
+
+        return models.Image.create({
+          uri: imageUrl,
+          latitude,
+          longitude,
+          UserId
+        });
+      } catch (e) {
+        console.log("UPLOAD ERROR: ", e);
+      }
     }
   },
   User: {

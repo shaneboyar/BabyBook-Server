@@ -15,7 +15,7 @@ export const typeDefs = gql`
     latitude: Int
     longitude: Int
     user: User!
-    file: Upload!
+    file: File!
     createdAt: Date!
   }
 

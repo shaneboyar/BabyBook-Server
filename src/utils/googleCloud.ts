@@ -1,5 +1,5 @@
 import shortid from "shortid";
-import { writeFile, unlinkSync } from "fs";
+import { writeFile, unlink } from "fs";
 import { Storage } from "@google-cloud/storage";
 
 // Creates a client from a Google service account key.
@@ -7,13 +7,15 @@ const storage = new Storage({ keyFilename: "./gcs-creds.json" });
 const BUCKET_NAME = "baby-book-bucket";
 const bucket = storage.bucket(BUCKET_NAME);
 
-export const upload = async (fileString: any): Promise<any> => {
+export const upload = async (file: any): Promise<any> => {
+  const { createReadStream } = await file;
+  const stream = createReadStream();
   const name = `${shortid.generate()}.jpg`;
-  bucket.file(name);
+  const remoteFile = bucket.file(name);
 
   const options = {
     destination: name,
-    resumable: true,
+    resumable: false,
     validation: "crc32c"
     // metadata: {
     //   metadata: {
@@ -22,24 +24,33 @@ export const upload = async (fileString: any): Promise<any> => {
     // }
   };
 
-  return new Promise((resolve, reject) => {
-    const TMP_FILE_PATH = "tmpfile.jpg";
-    writeFile(TMP_FILE_PATH, fileString, { encoding: "base64" }, () => {
-      return bucket.upload(TMP_FILE_PATH, options, function(
-        err,
-        file,
-        { mediaLink }
-      ) {
-        if (file) {
-          console.log("file exists?");
-          resolve(mediaLink);
-        } else {
-          reject(err);
-        }
-        unlinkSync(TMP_FILE_PATH);
-      });
-    });
+  // Store the file in the filesystem.
+  await new Promise((resolve, reject) => {
+    // Create a stream to which the upload will be written.
+    const writeStream = remoteFile.createWriteStream(options);
+
+    // When the upload is fully written, resolve the promise.
+    writeStream.on("finish", resolve);
+    writeStream.on("error", e => reject(e));
+
+    // stream.on("error", (error: Error) => {
+    //   writeStream.destroy(error)
+    // });
+
+    // Pipe the upload into the write stream.
+    stream.pipe(writeStream);
   });
+
+  // const medialink = await remoteFile.getMetadata(
+  //   (err: Error, metadata: object) => {
+  //     if (err) {
+  //       throw err;
+  //     }
+  //     console.log("metadata: ", metadata);
+  //   }
+  // );
+  const [{ mediaLink }] = await remoteFile.getMetadata();
+  return mediaLink;
 };
 
 // const options = {
