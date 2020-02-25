@@ -17,6 +17,7 @@ export const typeDefs = gql`
     user: User!
     file: File!
     createdAt: Date!
+    likers: [Int]!
   }
 
   type User {

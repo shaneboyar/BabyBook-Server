@@ -7,7 +7,8 @@
     "start": "nodemon -r esm src/index.ts",
     "db:rollback": "cd src/db; sequelize db:migrate:undo; cd ../..",
     "db:rollback:all": "cd src/db; sequelize db:migrate:undo:all; cd ../..",
-    "db:migrate": "cd src/db; sequelize db:migrate; cd ../.."
+    "db:migrate": "cd src/db; sequelize db:migrate; cd ../..",
+    "db:reset": "yarn db:rollback:all; yarn db:migrate"
   },
   "devDependencies": {
     "nodemon": "^2.0.2",

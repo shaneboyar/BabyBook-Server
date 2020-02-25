@@ -62,21 +62,28 @@ export const resolvers: IResolvers = {
     }
   },
   User: {
-    async images(images) {
-      return images.getImages();
+    async images(user) {
+      return user.getImages();
     },
-    async favorites(favorites) {
-      return favorites.getFavorites();
+    async favorites(user) {
+      return user.getFavorites();
     }
   },
   Image: {
-    async user(user) {
-      return user.getUser();
+    async user(image) {
+      return image.getUser();
+    },
+    async likers(image, root, { models }) {
+      const favorites = await models.Favorite.findAll({
+        where: { ImageId: image.id }
+      });
+      const userIds = favorites.map(({ dataValues }: any) => dataValues.UserId);
+      return userIds;
     }
   },
   Favorite: {
-    async Image(image) {
-      return image.getImage();
+    async Image(favorite) {
+      return favorite.getImage();
     }
   },
   Date: new GraphQLScalarType({

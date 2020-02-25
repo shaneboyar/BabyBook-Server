@@ -11,6 +11,7 @@ export default (sequelize, DataTypes) => {
   Image.associate = function(models) {
     // associations can be defined here
     Image.belongsTo(models.User, { foreignKey: "UserId" });
+    Image.hasMany(models.Favorite);
   };
   return Image;
 };
