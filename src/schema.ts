@@ -37,11 +37,11 @@ export const typeDefs = gql`
   type Query {
     getUser(id: Int!): User
     getUserByUUID(uuid: String!): User
-    getAllUsers: [User!]!
+    users: [User!]!
     getImage(id: Int!): Image
-    getAllImages: [Image!]!
-    getAllFavorites: [Favorite]!
-    getUserFavorites(UserId: Int!): [Image]!
+    images: [Image!]!
+    favorites: [Favorite]!
+    userFavorites(UserId: Int!): [Image]!
   }
 
   type Mutation {

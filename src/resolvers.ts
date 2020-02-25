@@ -11,13 +11,13 @@ export const resolvers: IResolvers = {
     async getUserByUUID(_root, { uuid }, { models }) {
       return models.User.findOne({ where: { uuid } });
     },
-    async getAllUsers(_root, _args, { models }) {
+    async users(_root, _args, { models }) {
       return models.User.findAll();
     },
-    async getAllFavorites(_root, _args, { models }) {
+    async favorites(_root, _args, { models }) {
       return models.Favorite.findAll();
     },
-    async getUserFavorites(_root, { UserId }, { models }) {
+    async userFavorites(_root, { UserId }, { models }) {
       console.log("UserId: ", UserId);
       // return models.Favorite.findAll({ where: { UserId } });
       return models.Favorite.findAll({
@@ -29,7 +29,7 @@ export const resolvers: IResolvers = {
     async getImage(_root, { id }, { models }) {
       return models.Image.findByPk(id);
     },
-    async getAllImages(_root, _args, { models }) {
+    async images(_root, _args, { models }) {
       return models.Image.findAll({ order: [["createdAt", "DESC"]] });
     }
   },
@@ -50,7 +50,6 @@ export const resolvers: IResolvers = {
       try {
         const imageUrl = await upload(file);
         console.log("imageUrl: ", imageUrl);
-
         return models.Image.create({
           uri: imageUrl,
           latitude,
