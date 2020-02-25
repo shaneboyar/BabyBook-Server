@@ -35,10 +35,10 @@ export const typeDefs = gql`
   }
 
   type Query {
-    getUser(id: Int!): User
+    user(id: Int!): User
     getUserByUUID(uuid: String!): User
     users: [User!]!
-    getImage(id: Int!): Image
+    image(id: Int!): Image
     images: [Image!]!
     favorites: [Favorite]!
     userFavorites(UserId: Int!): [Image]!

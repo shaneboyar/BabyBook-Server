@@ -5,7 +5,7 @@ import { upload } from "./utils/googleCloud";
 
 export const resolvers: IResolvers = {
   Query: {
-    async getUser(_root, { id }, { models }) {
+    async user(_root, { id }, { models }) {
       return models.User.findByPk(id);
     },
     async getUserByUUID(_root, { uuid }, { models }) {
@@ -26,7 +26,7 @@ export const resolvers: IResolvers = {
         order: [[models.Image, "createdAt", "DESC"]]
       }).map((favorite: any) => favorite.Image);
     },
-    async getImage(_root, { id }, { models }) {
+    async image(_root, { id }, { models }) {
       return models.Image.findByPk(id);
     },
     async images(_root, _args, { models }) {
@@ -71,7 +71,7 @@ export const resolvers: IResolvers = {
   },
   Image: {
     async user(image) {
-      return image.getUser();
+      return image.user();
     },
     async likers(image, root, { models }) {
       const favorites = await models.Favorite.findAll({
@@ -83,7 +83,7 @@ export const resolvers: IResolvers = {
   },
   Favorite: {
     async Image(favorite) {
-      return favorite.getImage();
+      return favorite.image();
     }
   },
   Date: new GraphQLScalarType({
