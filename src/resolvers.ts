@@ -18,13 +18,13 @@ export const resolvers: IResolvers = {
       return models.Favorite.findAll();
     },
     async userFavorites(_root, { UserId }, { models }) {
-      console.log("UserId: ", UserId);
-      // return models.Favorite.findAll({ where: { UserId } });
-      return models.Favorite.findAll({
-        where: { UserId },
-        include: models.Image,
-        order: [[models.Image, "createdAt", "DESC"]]
-      }).map((favorite: any) => favorite.Image);
+      return models.Image.findAll({
+        order: [["createdAt", "DESC"]],
+        include: {
+          model: models.Favorite,
+          where: { UserId }
+        }
+      });
     },
     async image(_root, { id }, { models }) {
       return models.Image.findByPk(id);
@@ -48,20 +48,25 @@ export const resolvers: IResolvers = {
         UserId,
         ImageId
       });
-      return models.Image.findByPk(ImageId);
+
+      return await models.Image.findByPk(ImageId, { include: models.Favorite });
     },
-    async createImage(root, { file, latitude, longitude, UserId }, { models }) {
+    async createImage(
+      root,
+      { file, latitude, longitude, UserId, preview },
+      { models }
+    ) {
       try {
         const imageUrl = await upload(file);
-        console.log("imageUrl: ", imageUrl);
         return models.Image.create({
           uri: imageUrl,
           latitude,
           longitude,
-          UserId
+          UserId,
+          preview
         });
       } catch (e) {
-        console.log("UPLOAD ERROR: ", e);
+        console.warn("UPLOAD ERROR: ", e);
       }
     }
   },
@@ -79,7 +84,9 @@ export const resolvers: IResolvers = {
     },
     async likers(image, root, { models }) {
       const favorites = await image.Favorites;
-      const userIds = favorites.map(({ dataValues }: any) => dataValues.UserId);
+      const userIds = favorites
+        ? favorites.map(({ dataValues }: any) => dataValues.UserId)
+        : [];
       return userIds;
     }
   },

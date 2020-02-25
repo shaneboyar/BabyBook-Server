@@ -12,6 +12,7 @@ export const typeDefs = gql`
   type Image {
     id: Int!
     uri: String!
+    preview: String!
     latitude: Int
     longitude: Int
     user: User!
@@ -52,6 +53,7 @@ export const typeDefs = gql`
       longitude: Float!
       UserId: Int!
       file: Upload!
+      preview: String!
     ): Image!
   }
 `;

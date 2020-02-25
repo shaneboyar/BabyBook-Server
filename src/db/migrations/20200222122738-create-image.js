@@ -19,6 +19,9 @@ module.exports = {
       uri: {
         type: Sequelize.STRING
       },
+      preview: {
+        type: Sequelize.TEXT
+      },
       latitude: {
         type: Sequelize.FLOAT
       },
