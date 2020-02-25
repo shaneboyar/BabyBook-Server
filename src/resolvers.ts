@@ -30,7 +30,10 @@ export const resolvers: IResolvers = {
       return models.Image.findByPk(id);
     },
     async images(_root, _args, { models }) {
-      return models.Image.findAll({ order: [["createdAt", "DESC"]] });
+      return models.Image.findAll({
+        order: [["createdAt", "DESC"]],
+        include: models.Favorite
+      });
     }
   },
   Mutation: {
@@ -41,10 +44,11 @@ export const resolvers: IResolvers = {
       });
     },
     async createFavorite(root, { UserId, ImageId }, { models }) {
-      return models.Favorite.create({
+      await models.Favorite.create({
         UserId,
         ImageId
       });
+      return models.Image.findByPk(ImageId);
     },
     async createImage(root, { file, latitude, longitude, UserId }, { models }) {
       try {
@@ -74,9 +78,7 @@ export const resolvers: IResolvers = {
       return image.user();
     },
     async likers(image, root, { models }) {
-      const favorites = await models.Favorite.findAll({
-        where: { ImageId: image.id }
-      });
+      const favorites = await image.Favorites;
       const userIds = favorites.map(({ dataValues }: any) => dataValues.UserId);
       return userIds;
     }
