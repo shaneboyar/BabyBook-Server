@@ -41,7 +41,7 @@ export const typeDefs = gql`
     getImage(id: Int!): Image
     getAllImages: [Image!]!
     getAllFavorites: [Favorite]!
-    getUserFavorites(UserId: Int!): [Favorite]!
+    getUserFavorites(UserId: Int!): [Image]!
   }
 
   type Mutation {

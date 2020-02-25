@@ -22,8 +22,9 @@ export const resolvers: IResolvers = {
       // return models.Favorite.findAll({ where: { UserId } });
       return models.Favorite.findAll({
         where: { UserId },
-        include: models.Image
-      });
+        include: models.Image,
+        order: [[models.Image, "createdAt", "DESC"]]
+      }).map((favorite: any) => favorite.Image);
     },
     async getImage(_root, { id }, { models }) {
       return models.Image.findByPk(id);
