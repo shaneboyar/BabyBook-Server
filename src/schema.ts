@@ -48,6 +48,7 @@ export const typeDefs = gql`
   type Mutation {
     createUser(name: String!, uuid: String!): User!
     createFavorite(UserId: Int!, ImageId: Int!): Image!
+    destroyFavorite(UserId: Int!, ImageId: Int!): Image!
     createImage(
       latitude: Float!
       longitude: Float!
