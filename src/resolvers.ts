@@ -1,37 +1,28 @@
 import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
 import { IResolvers } from "graphql-tools";
-import queries from "./queries";
-import mutations from "./mutations";
+import {
+  User,
+  Image,
+  Favorite,
+  userQueries,
+  imageQueries,
+  favoriteQueries,
+  userMutations,
+  imageMutations,
+  favoriteMutations
+} from "./gql";
 
 export const resolvers: IResolvers = {
-  Query: queries,
-  Mutation: mutations,
-  User: {
-    async images(user) {
-      return user.getImages();
-    },
-    async favorites(user) {
-      return user.getFavorites();
-    }
+  Query: { ...userQueries, ...imageQueries, ...favoriteQueries },
+  Mutation: {
+    ...userMutations,
+    ...imageMutations,
+    ...favoriteMutations
   },
-  Image: {
-    async user(image) {
-      return image.user();
-    },
-    async likers(image, root, { models }) {
-      const favorites = await image.Favorites;
-      const userIds = favorites
-        ? favorites.map(({ dataValues }: any) => dataValues.UserId)
-        : [];
-      return userIds;
-    }
-  },
-  Favorite: {
-    async Image(favorite) {
-      return favorite.image();
-    }
-  },
+  User,
+  Image,
+  Favorite,
   Date: new GraphQLScalarType({
     name: "Date",
     description: "Date custom scalar type",

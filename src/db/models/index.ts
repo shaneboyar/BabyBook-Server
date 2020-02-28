@@ -1,41 +1,36 @@
-const fs = require("fs");
-const path = require("path");
-const Sequelize = require("sequelize");
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/config.json")[env];
-const db = {} as any;
+import { Sequelize } from "sequelize";
+import createFavorite from "./favorite";
+import createImage from "./image";
+import createUser from "./user";
 
-let sequelize: any;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
-  );
-}
-
-fs.readdirSync(__dirname)
-  .filter((file: any) => {
-    return (
-      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
-    );
-  })
-  .forEach((file: any) => {
-    const model = sequelize["import"](path.join(__dirname, file));
-    db[model.name] = model;
-  });
-
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+const createModels = async (sequelize: Sequelize) => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
   }
-});
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+  const User = createUser(sequelize);
+  const Image = createImage(sequelize);
+  const Favorite = createFavorite(sequelize);
 
-export default db;
+  User.hasMany(Image);
+  User.hasMany(Favorite);
+
+  Image.belongsTo(User);
+  Image.hasMany(Favorite);
+
+  Favorite.belongsTo(Image);
+  Favorite.belongsTo(User);
+
+  try {
+    await sequelize.sync({ alter: true });
+    console.log("All models were synchronized successfully.");
+  } catch (error) {
+    console.error("Unable to sync the database:", error);
+  }
+  return sequelize.models;
+};
+
+export default createModels;

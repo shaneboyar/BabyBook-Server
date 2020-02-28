@@ -3,7 +3,7 @@ import { gql } from "apollo-server";
 export const typeDefs = gql`
   scalar Date
 
-  type File {
+  input File {
     filename: String!
     mimetype: String!
     encoding: String!
@@ -16,45 +16,48 @@ export const typeDefs = gql`
     latitude: Int
     longitude: Int
     user: User!
-    file: File!
     createdAt: Date!
-    likers: [Int]!
+    favoriteUserIds: [Int]!
+  }
+
+  input UserInput {
+    name: String!
+    uuid: String!
   }
 
   type User {
     id: Int!
-    name: String
-    images: [Image]
-    favorites: [Favorite]
-    uuid: String
+    name: String!
+    images: [Image]!
+    favorites: [Favorite]!
+    uuid: String!
+  }
+
+  input FavoriteInput {
+    UserId: ID!
+    ImageId: ID!
   }
 
   type Favorite {
-    UserId: Int!
-    ImageId: Int!
-    Image: Image!
+    id: Int!
+    user: User!
+    image: Image!
   }
 
   type Query {
-    user(id: Int!): User
-    getUserByUUID(uuid: String!): User
-    users: [User!]!
-    image(id: Int!): Image
-    images: [Image!]!
+    # user(id: Int!): User
+    # getUserByUUID(uuid: String!): User
+    users: [User]!
+    # image(id: Int!): Image
+    images: [Image]!
     favorites: [Favorite]!
     userFavorites(UserId: Int!): [Image]!
   }
 
   type Mutation {
-    createUser(name: String!, uuid: String!): User!
-    createFavorite(UserId: Int!, ImageId: Int!): Image!
-    destroyFavorite(UserId: Int!, ImageId: Int!): Image!
-    createImage(
-      latitude: Float!
-      longitude: Float!
-      UserId: Int!
-      file: Upload!
-      preview: String!
-    ): Image!
+    createUser(user: UserInput!): User!
+    createFavorite(favorite: FavoriteInput!): Favorite!
+    destroyFavorite(favorite: FavoriteInput!): Favorite!
+    createImage(UserId: Int!, file: Upload!, preview: String!): Image!
   }
 `;
