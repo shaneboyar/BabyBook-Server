@@ -12,6 +12,23 @@ const createImage = (sequelize: Sequelize) => {
       preview: {
         type: DataTypes.TEXT,
         allowNull: false
+      },
+      latitude: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      },
+      longitude: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      },
+      title: {
+        type: DataTypes.STRING
+      },
+      story: {
+        type: DataTypes.TEXT
+      },
+      milestone: {
+        type: DataTypes.STRING
       }
     },
     {

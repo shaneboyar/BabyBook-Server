@@ -2,13 +2,26 @@ import { IResolverObject } from "apollo-server";
 import { upload } from "../utils/googleCloud";
 
 export const imageMutations = {
-  async createImage(root, { file, UserId, preview }, { models }) {
+  async createImage(
+    root,
+    { file, UserId, preview, latitude, longitude, title, story, milestone },
+    { models }
+  ) {
+    console.log(
+      "{ file, UserId, latitude, longitude, title, story, milestone }: ",
+      { file, UserId, latitude, longitude, title, story, milestone }
+    );
     try {
       const imageUrl = await upload(file);
       return models.Image.create({
         uri: imageUrl,
         UserId,
-        preview
+        preview,
+        latitude,
+        longitude,
+        title,
+        story,
+        milestone
       });
     } catch (e) {
       console.warn("UPLOAD ERROR: ", e);
@@ -21,7 +34,6 @@ export const imageQueries = {
   //   return models.Image.findByPk(id);
   // },
   async images(_root, _args, { models }) {
-    console.log("models: ", models.Image);
     return models.Image.findAll({
       order: [["createdAt", "DESC"]],
       include: models.favorite
@@ -47,5 +59,15 @@ export default {
     return image.getFavorites().map((favorite: any) => {
       return favorite.UserId;
     });
+  },
+  async metadata(image) {
+    return {
+      latitude: image.latitude,
+      longitude: image.longitude,
+      title: image.title,
+      story: image.story,
+      milestone: image.milestone,
+      createdAt: image.createdAt
+    };
   }
 } as IResolverObject;

@@ -9,14 +9,21 @@ export const typeDefs = gql`
     encoding: String!
   }
 
+  type ImageMetadata {
+    latitude: Float!
+    longitude: Float!
+    title: String
+    story: String
+    milestone: String
+    createdAt: Date!
+  }
+
   type Image {
     id: Int!
     uri: String!
     preview: String!
-    latitude: Int
-    longitude: Int
+    metadata: ImageMetadata
     user: User!
-    createdAt: Date!
     favoriteUserIds: [Int]!
   }
 
@@ -58,6 +65,15 @@ export const typeDefs = gql`
     createUser(user: UserInput!): User!
     createFavorite(favorite: FavoriteInput!): Favorite!
     destroyFavorite(favorite: FavoriteInput!): Favorite!
-    createImage(UserId: Int!, file: Upload!, preview: String!): Image!
+    createImage(
+      UserId: Int!
+      file: Upload!
+      preview: String!
+      latitude: Float!
+      longitude: Float!
+      title: String
+      story: String
+      milestone: String
+    ): Image!
   }
 `;
