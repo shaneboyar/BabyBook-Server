@@ -1,5 +1,6 @@
 import { IResolverObject } from "apollo-server";
 import { upload } from "../utils/googleCloud";
+import { reverseGeocode } from "../utils/googleMaps";
 
 export const imageMutations = {
   async createImage(
@@ -7,11 +8,8 @@ export const imageMutations = {
     { file, UserId, preview, latitude, longitude, title, story, milestone },
     { models }
   ) {
-    console.log(
-      "{ file, UserId, latitude, longitude, title, story, milestone }: ",
-      { file, UserId, latitude, longitude, title, story, milestone }
-    );
     try {
+      const location = await reverseGeocode(latitude, longitude);
       const imageUrl = await upload(file);
       return models.Image.create({
         uri: imageUrl,
@@ -19,6 +17,7 @@ export const imageMutations = {
         preview,
         latitude,
         longitude,
+        location,
         title,
         story,
         milestone
@@ -40,7 +39,6 @@ export const imageQueries = {
     });
   },
   async userFavorites(_root, { UserId }, { models }) {
-    console.log("UserId: ", UserId);
     return models.Image.findAll({
       order: [["createdAt", "DESC"]],
       include: {
@@ -61,13 +59,16 @@ export default {
     });
   },
   async metadata(image) {
+    const user = await image.getUser();
     return {
       latitude: image.latitude,
       longitude: image.longitude,
+      location: image.location,
       title: image.title,
       story: image.story,
       milestone: image.milestone,
-      createdAt: image.createdAt
+      createdAt: image.createdAt,
+      user: user.name
     };
   }
 } as IResolverObject;

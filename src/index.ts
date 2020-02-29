@@ -3,6 +3,7 @@ import { typeDefs } from "./schema";
 import { resolvers } from "./resolvers";
 import createSequelize from "./db";
 import createModels from "./db/models";
+require("dotenv").config();
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.

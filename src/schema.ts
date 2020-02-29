@@ -12,10 +12,12 @@ export const typeDefs = gql`
   type ImageMetadata {
     latitude: Float!
     longitude: Float!
+    location: String
     title: String
     story: String
     milestone: String
     createdAt: Date!
+    user: String!
   }
 
   type Image {

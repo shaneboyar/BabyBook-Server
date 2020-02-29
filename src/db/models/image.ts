@@ -21,6 +21,9 @@ const createImage = (sequelize: Sequelize) => {
         type: DataTypes.FLOAT,
         allowNull: false
       },
+      location: {
+        type: DataTypes.STRING
+      },
       title: {
         type: DataTypes.STRING
       },

@@ -17,11 +17,6 @@ export const upload = async (file: any): Promise<any> => {
     destination: name,
     resumable: false,
     validation: "crc32c"
-    // metadata: {
-    //   metadata: {
-    //     event: 'Fall trip to the zoo'
-    //   }
-    // }
   };
 
   // Store the file in the filesystem.
@@ -32,34 +27,9 @@ export const upload = async (file: any): Promise<any> => {
     // When the upload is fully written, resolve the promise.
     writeStream.on("finish", resolve);
     writeStream.on("error", e => reject(e));
-
-    // stream.on("error", (error: Error) => {
-    //   writeStream.destroy(error)
-    // });
-
     // Pipe the upload into the write stream.
     stream.pipe(writeStream);
   });
-
-  // const medialink = await remoteFile.getMetadata(
-  //   (err: Error, metadata: object) => {
-  //     if (err) {
-  //       throw err;
-  //     }
-  //     console.log("metadata: ", metadata);
-  //   }
-  // );
   const [{ mediaLink }] = await remoteFile.getMetadata();
   return mediaLink;
 };
-
-// const options = {
-//   destination: 'new-image.png',
-//   resumable: true,
-//   validation: 'crc32c',
-//   metadata: {
-//     metadata: {
-//       event: 'Fall trip to the zoo'
-//     }
-//   }
-// };
