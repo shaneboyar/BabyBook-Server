@@ -13,7 +13,7 @@ require("dotenv").config();
   const models = await createModels(sequelize);
   const server = new ApolloServer({ typeDefs, resolvers, context: { models } });
   // The `listen` method launches a web server.
-  server.listen().then(({ url }) => {
+  server.listen(process.env.PORT || 4000).then(({ url }) => {
     console.log(`🚀  Server ready at ${url}`);
   });
 })();
