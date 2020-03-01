@@ -16,10 +16,10 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.2",
-    "ts-node": "^8.6.2",
-    "typescript": "^3.8.2"
+    "ts-node": "^8.6.2"
   },
   "dependencies": {
+    "typescript": "^3.8.2",
     "@google-cloud/storage": "^4.3.1",
     "@googlemaps/google-maps-services-js": "^2.1.1",
     "@types/lodash": "^4.14.149",
