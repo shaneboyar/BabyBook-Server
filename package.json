@@ -10,6 +10,7 @@
     "db:migrate": "cd src/db; sequelize db:migrate; cd ../..",
     "db:reset": "yarn db:rollback:all; yarn db:migrate"
   },
+  "heroku-postbuild": "yarn install --production",
   "devDependencies": {
     "nodemon": "^2.0.2",
     "ts-node": "^8.6.2",
