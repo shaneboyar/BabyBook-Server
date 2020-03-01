@@ -8,9 +8,10 @@
     "db:rollback": "cd src/db; sequelize db:migrate:undo; cd ../..",
     "db:rollback:all": "cd src/db; sequelize db:migrate:undo:all; cd ../..",
     "db:migrate": "cd src/db; sequelize db:migrate; cd ../..",
-    "db:reset": "yarn db:rollback:all; yarn db:migrate"
+    "db:reset": "yarn db:rollback:all; yarn db:migrate",
+    "heroku-prebuild": "node gcsSetup.js",
+    "heroku-postbuild": "yarn install --production"
   },
-  "heroku-postbuild": "yarn install --production",
   "devDependencies": {
     "nodemon": "^2.0.2",
     "ts-node": "^8.6.2",
