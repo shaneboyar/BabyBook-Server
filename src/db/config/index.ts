@@ -1,33 +1,31 @@
 interface IDBConfig {
   [key: string]: {
-    username: string;
-    password: null;
-    database: "database_development" | "database_test" | "DATABASE";
-    host: "127.0.0.1";
+    uri: string;
     dialect: "postgres";
+    protocol: "postgres";
+    dialectOptions?: {
+      ssl: true;
+    };
   };
 }
 
 export default {
   development: {
-    username: "shaneboyar",
-    password: null,
-    database: "database_development",
-    host: "127.0.0.1",
-    dialect: "postgres"
+    uri: "postgres://shaneboyar:@127.0.0.1:5432/database_development",
+    dialect: "postgres",
+    protocol: "postgres"
   },
   test: {
-    username: "shaneboyar",
-    password: null,
-    database: "database_test",
-    host: "127.0.0.1",
-    dialect: "postgres"
+    uri: "postgres://shaneboyar:@127.0.0.1:5432/database_test",
+    dialect: "postgres",
+    protocol: "postgres"
   },
   production: {
-    username: "root",
-    password: null,
-    database: "DATABASE",
-    host: process.env.DATABASE_URL,
-    dialect: "postgres"
+    uri: process.env.DATABASE_URL,
+    dialect: "postgres",
+    protocol: "postgres",
+    dialectOptions: {
+      ssl: true
+    }
   }
 } as IDBConfig;
