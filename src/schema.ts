@@ -59,6 +59,7 @@ export const typeDefs = gql`
     users: [User]!
     # image(id: Int!): Image
     images: [Image]!
+    image(id: Int!): Image
     favorites: [Favorite]!
     userFavorites(UserId: Int!): [Image]!
   }
