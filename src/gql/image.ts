@@ -36,16 +36,16 @@ export const imageMutations = {
 } as IResolverObject;
 
 export const imageQueries = {
-  async image(_root, { id }, { models }) {
-    return models.Image.findByPk(id);
+  async image(_root, { id }, { models, loaders }) {
+    return loaders.Image.load(id);
   },
-  async images(_root, _args, { models }) {
+  async images(_root, _args, { models, loaders }) {
     return models.Image.findAll({
       order: [["createdAt", "DESC"]],
       include: models.favorite
     });
   },
-  async userFavorites(_root, { UserId }, { models }) {
+  async userFavorites(_root, { UserId }, { models, loaders }) {
     return models.Image.findAll({
       order: [["createdAt", "DESC"]],
       include: {
@@ -57,16 +57,19 @@ export const imageQueries = {
 } as IResolverObject;
 
 export default {
-  async user(image) {
-    return image.getUser();
+  async user(image, _args, { loaders }) {
+    return loaders.User.load(image.UserId);
   },
-  async favoriteUserIds(image) {
-    return image.getFavorites().map((favorite: any) => {
-      return favorite.UserId;
-    });
+  async favoriteUserIds(image, _args, { loaders }) {
+    const users = await loaders.ImageFavoriteUsers.load(image.id);
+    // const loadedImage = await loaders.Image.load(image.id);
+    // return loadedImage.getFavorites().map((favorite: any) => {
+    //   return favorite.UserId;
+    // });
+    return users.map((user: any) => user.id);
   },
-  async metadata(image) {
-    const user = await image.getUser();
+  async metadata(image, _args, { loaders }) {
+    const user = await loaders.User.load(image.UserId);
     return {
       latitude: image.latitude,
       longitude: image.longitude,

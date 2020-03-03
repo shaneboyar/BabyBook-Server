@@ -17,9 +17,19 @@ const createModels = async (sequelize: Sequelize) => {
 
   User.hasMany(Image);
   User.hasMany(Favorite);
+  // User.belongsToMany(Image, {
+  //   through: Favorite,
+  //   as: "LikedImages",
+  //   foreignKey: "UserId"
+  // });
 
   Image.belongsTo(User);
   Image.hasMany(Favorite);
+  Image.belongsToMany(User, {
+    through: Favorite,
+    as: "Likers",
+    foreignKey: "ImageId"
+  });
 
   Favorite.belongsTo(Image);
   Favorite.belongsTo(User);
